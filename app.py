@@ -37,6 +37,13 @@ users_db = [
     }
 ]
 
+@app.route("/")
+def index():
+    if session.get("admin_logged_in"):
+        return redirect(url_for("admin_panel"))
+    return redirect(url_for("login"))
+
+
 # Авторизация
 @app.route("/login", methods=["GET", "POST"])
 def login():
