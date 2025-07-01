@@ -77,11 +77,11 @@ def login_required(f):
 @login_required
 def admin_panel():
     user = admin_users[session["admin_username"]]
-    return render_template("dashboard.html", admin_user=user)
+    return render_template("admin.html", admin_user=user)
 
 @app.route("/admin/users")
 @login_required
-def admin_users():
+def admin_users_page():  # <-- новое имя функции
     user = admin_users[session["admin_username"]]
     search_query = request.args.get("search", "")
     filtered_users = [u for u in users_db if search_query.lower() in (u.get("first_name", "") + u.get("phone_number", "")).lower()]
