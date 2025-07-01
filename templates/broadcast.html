@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рассылка - Coffee Shop Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-coffee"></i> CoffeePanel</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_panel', uid=uid) }}">
+                        <i class="fas fa-dashboard"></i> Главная
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_users', uid=uid) }}">
+                        <i class="fas fa-users"></i> Пользователи
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_settings', uid=uid) }}">
+                        <i class="fas fa-cog"></i> Настройки бота
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('admin_broadcast', uid=uid) }}">
+                        <i class="fas fa-bullhorn"></i> Рассылка
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="admin-info">
+            <p class="admin-name">
+                <i class="fas fa-user-shield"></i> {{ admin_user.first_name }}
+            </p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-bullhorn"></i> Рассылка сообщений</h1>
+                <p class="text-muted">Отправка сообщений пользователям бота</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="row">
+                <div class="col-md-8">
+                    <form method="post" class="broadcast-form">
+                        <div class="broadcast-card">
+                            <h5><i class="fas fa-edit"></i> Создание рассылки</h5>
+                            
+                            <div class="mb-3">
+                                <label for="target_audience" class="form-label">
+                                    <i class="fas fa-users"></i> Целевая аудитория
+                                </label>
+                                <select class="form-select" id="target_audience" name="target_audience">
+                                    <option value="all">Все пользователи</option>
+                                    <option value="male">Только мужчины</option>
+                                    <option value="female">Только женщины</option>
+                                    <option value="complete">Пользователи с полными профилями</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="message" class="form-label">
+                                    <i class="fas fa-comment"></i> Текст сообщения
+                                </label>
+                                <textarea class="form-control" id="message" name="message" rows="6" 
+                                          placeholder="Введите текст сообщения для рассылки..." required></textarea>
+                                <div class="form-text">
+                                    К сообщению автоматически добавится значок 📢
+                                </div>
+                            </div>
+
+                            <div class="broadcast-actions">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane"></i> Отправить рассылку
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="broadcast-info">
+                        <h5><i class="fas fa-info-circle"></i> Информация</h5>
+                        <div class="info-item">
+                            <i class="fas fa-users"></i>
+                            <span>Рассылка отправляется всем выбранным пользователям</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Отправка может занять некоторое время</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Администраторы не получают рассылки</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Используйте рассылку ответственно</span>
+                        </div>
+                    </div>
+
+                    <div class="broadcast-tips mt-4">
+                        <h5><i class="fas fa-lightbulb"></i> Советы</h5>
+                        <ul>
+                            <li>Используйте эмодзи для привлечения внимания</li>
+                            <li>Делайте сообщения короткими и понятными</li>
+                            <li>Указывайте конкретные действия или предложения</li>
+                            <li>Не злоупотребляйте рассылками</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>
